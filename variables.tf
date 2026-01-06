@@ -3,6 +3,11 @@ variable "render_api_key" {
   sensitive = true
 }
 
+variable "render_owner_id" {
+  type      = string
+  sensitive = true
+}
+
 variable "cockroach_api_key" {
   type      = string
   sensitive = true

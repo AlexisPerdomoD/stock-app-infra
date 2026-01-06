@@ -1,49 +1,53 @@
 terraform {
   required_providers {
     render = {
-      source  = "render-oss/render"
-      version = "~> 1.5"
+      source = "render-oss/render"
     }
   }
 }
 
-resource "render_web_service" "api" {
-  runtime = "go"
-  name    = "${var.project_name}-api"
-  region  = var.region
-  plan    = "free"
-  repo    = var.repo_url
-  branch  = "dev"
 
-  build_command = <<EOF
+
+resource "render_web_service" "api" {
+  name          = "${var.project_name}-api"
+  region        = var.region
+  plan          = "starter"
+  start_command = "./app"
+
+  runtime_source = {
+    native_runtime = {
+      auto_deploy   = true
+      branch        = "dev"
+      build_command = <<EOF
 curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.0/migrate.linux-amd64.tar.gz \
   | tar xvz && mv migrate /usr/local/bin/migrate
 
-make migrate-up
 go build -o app
 EOF
+      repo_url      = var.repo_url
+      runtime       = "go"
+    }
 
-  start_command = "./app"
+  }
 
   env_vars = {
     # COCKROACH
-    CR_HOST        = var.cr_host
-    CR_PORT        = var.cr_port
-    CR_USER        = var.cr_user
-    CR_PASSWORD    = var.cr_password
-    CR_DB          = var.cr_db
-    CR_SSL         = var.cr_ssl
-    CR_RUN_MIGRATE = "TRUE"
-
+    "CR_HOST"     = { value = var.cr_host }
+    "CR_PORT"     = { value = var.cr_port }
+    "CR_USER"     = { value = var.cr_user }
+    "CR_PASSWORD" = { value = var.cr_password }
+    "CR_DB"       = { value = var.cr_db }
+    "CR_SSL"      = { value = var.cr_ssl }
     # DATA SOURCING
-    MAIN_SOURCE_STOCK_URI = var.main_source_stock_uri
-    MAIN_SOURCE_STOCK_KEY = var.main_source_stock_key
-
+    "MAIN_SOURCE_STOCK_URI" = { value = var.main_source_stock_uri }
+    "MAIN_SOURCE_STOCK_KEY" = { value = var.main_source_stock_key }
     # AUTH
-    SESSION_SECRET = var.session_secret
-
+    "SESSION_SECRET" = { generate_value = true }
     # SERVER
-    SERVER_PORT = "3000"
-    GIN_MODE    = var.gin_mode
+    "SERVER_PORT" = { value = "3000" }
+    "GIN_MODE"    = { value = var.gin_mode }
+
+
   }
+
 }

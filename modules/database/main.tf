@@ -1,32 +1,39 @@
 terraform {
   required_providers {
-    cockroachdb = {
-      source  = "cockroachdb/cockroach"
-      version = "~> 1.9"
+    cockroach = {
+      source = "cockroachdb/cockroach"
     }
 
     random = {
-      source  = "hashicorp/random"
-      version = "~> 3.7"
+      source = "hashicorp/random"
     }
   }
 }
 
-resource "cockroachdb_cluster" "this" {
+resource "cockroach_cluster" "this" {
   name           = "${var.project_name}-db"
-  cloud_provider = "aws"
-  region         = "us-east-1"
-  serverless     = true
+  cloud_provider = "AWS"
+
+  regions = [{
+    name = "us-east-1"
+  }]
+
+  serverless = {
+    usage_limits = {
+      request_unit_limit = 4000000
+      storage_mib_limit  = 10000
+    }
+  }
 }
 
-resource "cockroachdb_database" "app" {
+resource "cockroach_database" "app" {
   name       = "app"
-  cluster_id = cockroachdb_cluster.this.id
+  cluster_id = cockroach_cluster.this.id
 }
 
-resource "cockroachdb_user" "app" {
+resource "cockroach_sql_user" "app" {
   name       = "app_user"
-  cluster_id = cockroachdb_cluster.this.id
+  cluster_id = cockroach_cluster.this.id
   password   = random_password.db.result
 }
 

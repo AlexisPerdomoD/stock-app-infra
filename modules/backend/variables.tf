@@ -52,3 +52,5 @@ variable "session_secret" {
 variable "gin_mode" {
   type = string
 }
+
+
