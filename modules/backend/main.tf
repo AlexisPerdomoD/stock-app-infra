@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    render = {
+      source  = "render-oss/render"
+      version = "~> 1.5"
+    }
+  }
+}
+
 resource "render_web_service" "api" {
   runtime = "go"
   name    = "${var.project_name}-api"

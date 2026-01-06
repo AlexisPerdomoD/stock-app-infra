@@ -1,3 +1,17 @@
+terraform {
+  required_providers {
+    cockroachdb = {
+      source  = "cockroachdb/cockroach"
+      version = "~> 1.9"
+    }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.7"
+    }
+  }
+}
+
 resource "cockroachdb_cluster" "this" {
   name           = "${var.project_name}-db"
   cloud_provider = "aws"

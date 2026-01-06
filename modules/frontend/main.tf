@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    render = {
+      source  = "render-oss/render"
+      version = "~> 1.5"
+    }
+  }
+}
+
 resource "render_static_site" "web" {
   name   = "${var.project_name}-web"
   plan   = "free"
