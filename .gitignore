@@ -1,0 +1,31 @@
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Variables sensibles
+*.tfvars
+*.tfvars.json
+
+# Overrides (por si acaso)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI config (credentials locales)
+.terraformrc
+terraform.rc
+
+# Logs
+crash.log
+crash.*.log
+
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
