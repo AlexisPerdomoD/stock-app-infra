@@ -16,3 +16,21 @@ variable "region" {
   type    = string
   default = "oregon"
 }
+
+variable "main_source_stock_uri" {
+  type = string
+}
+
+variable "main_source_stock_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "session_secret" {
+  type      = string
+  sensitive = true
+}
+
+variable "gin_mode" {
+  type = string
+}
